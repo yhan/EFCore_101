@@ -1,4 +1,6 @@
 ﻿
+# Devart
+
 1. Install packages
    - devart.data.postgresql.efcore\7.20.1836
    - microsoft.entityframeworkcore.design\5.0.3
@@ -26,6 +28,11 @@
 
    Entity Framework Core .NET Command-line Tools 6.0.0-preview.1.21102.2
    ```
+1. Create initial migration
+
+    ```.net core cli
+    dotnet ef migrations add InitialCreate
+    ```
 
 1. Try to update DB
    ```
@@ -98,3 +105,26 @@
        at Microsoft.EntityFrameworkCore.Design.OperationExecutor.OperationBase.Execute(Action action)
        Unexpected server response.
    ```
+
+# Npgsql
+1. Install packages
+   - microsoft.entityframeworkcore.design\6.0.0-preview.1.21102.2
+   - npgsql.entityframeworkcore.postgresql\6.0.0-preview1
+
+1. Create manually `StoreDB` dababase
+
+1. Create initial migration
+
+    ```.net core cli
+    dotnet ef migrations add InitialCreate
+    ```
+1. Update DB
+    ```
+    S E:\finexkap\poc\ConsoleApp.EF\ConsoleApp.EF.Npgsql> dotnet ef database update
+    Build started...
+    Build succeeded.
+    Applying migration '20210226153830_InitialCreate'.
+    Done.
+    ```
+
+    Great!
