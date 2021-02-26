@@ -5,7 +5,12 @@ VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp.EF", "ConsoleApp.EF\ConsoleApp.EF.csproj", "{CBEAF8D0-680D-456A-B09E-5452FD9F7A40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp.EF.Npgsql", "ConsoleApp.EF.Npgsql\ConsoleApp.EF.Npgsql.csproj", "{1615224E-E099-403D-A724-8636250D3A85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp.EF.Npgsql", "ConsoleApp.EF.Npgsql\ConsoleApp.EF.Npgsql.csproj", "{1615224E-E099-403D-A724-8636250D3A85}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{27744718-1F95-479F-9DF1-F257DF382061}"
+	ProjectSection(SolutionItems) = preProject
+		doc\README.md = doc\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
