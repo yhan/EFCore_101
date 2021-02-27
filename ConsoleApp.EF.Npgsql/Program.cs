@@ -6,7 +6,11 @@ namespace ConsoleApp.EF.Npgsql
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var context = new MyContext();
+            foreach (var blog in context.Blogs)
+            {
+                
+            }
         }
     }
 }
