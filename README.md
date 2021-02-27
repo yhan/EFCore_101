@@ -106,6 +106,24 @@
        Unexpected server response.
    ```
 
+1. Keep the nuget packages dependencies like this:
+  ```csharp
+   <PackageReference Include="Devart.Data" Version="5.0.2262" />
+   <PackageReference Include="Devart.Data.Linq" Version="4.9.1807" />
+   <PackageReference Include="Devart.Data.PostgreSql" Version="7.14.1470" />
+   <PackageReference Include="Devart.Data.PostgreSql.EFCore" Version="7.14.1470" />
+   <PackageReference Include="Devart.Data.PostgreSql.Linq" Version="4.9.1807" />
+  ```
+1. Use connection string 
+  ```csharp
+  User Id=postgres;Password=root;Host=localhost;Database={DbName};Port=5433;Persist Security Info=True;Initial Schema={Schema};Unicode=True;License Key=wMnQAqtt0hxxsDqJWvW9KxIj97Gok/73AlbVrLT0DD/uMFfe0qmajvZ7hwGLdgDsU0YXAbKCsQdefn/Tk2w4hP6ayVO14kefgaCTThN0Pserh6XISmNJiiEYrDxw/mlJfIbmJZovZts6ABoyLNOe24T/xWFPBVcL/dA8irfcBzxMXYEdH/IHfWenC2oN4DOh7lPTxS8zLJP7KXn1u85/8B6VoQtWnxcwDcLSKYfXHZGoVidjLYm8LiWYB7hTGU3dgx0AQsbDJN1CVVvXyC9BA/mWxvV+LRnXRYzr5jTW50U=
+  ```
+  Now,
+  - `dotnet ef migrations` commands OK
+  - `dotnet ef database` commands OK
+  - `DbContext` reading OK
+
+
 # Npgsql
 1. Install packages
    - microsoft.entityframeworkcore.design\6.0.0-preview.1.21102.2
@@ -128,3 +146,15 @@
     ```
 
     Great!
+
+## General
+
+1. I wanna revert already applied migration from DB
+   ```
+   dotnet ef database update {PreviousMigrationName}
+
+   # Then, remove the last migration from code
+   dotnet ef migrations remove
+
+   ```
+   > you can't remove a migration already applied (`update`) to DB

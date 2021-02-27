@@ -18,8 +18,6 @@ namespace ConsoleApp.EF
         public int CustomerID { get; set; }
         public int EmployeeID { get; set; }
 
-        public DateTime CreatedAt { get; set; }
-
         public List<OrderDetail> OrderDetails { get; set; }
     }
 
