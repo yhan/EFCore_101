@@ -8,30 +8,26 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ConsoleApp.EF.Migrations
 {
-    [DbContext(typeof(MyContext))]
-    [Migration("20210226140246_InitialCreate")]
+    [DbContext(typeof(FinexpayDatabaseContext))]
+    [Migration("20210227142832_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.3");
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062");
 
             modelBuilder.Entity("ConsoleApp.EF.Order", b =>
                 {
                     b.Property<int>("OrderID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<int>("CustomerID")
-                        .HasColumnType("int");
+                    b.Property<int>("CustomerID");
 
-                    b.Property<int>("EmployeeID")
-                        .HasColumnType("int");
+                    b.Property<int>("EmployeeID");
 
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("timestamp");
+                    b.Property<DateTime>("OrderDate");
 
                     b.HasKey("OrderID");
 
@@ -41,17 +37,13 @@ namespace ConsoleApp.EF.Migrations
             modelBuilder.Entity("ConsoleApp.EF.OrderDetail", b =>
                 {
                     b.Property<int>("OrderDetailID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<int>("OrderID")
-                        .HasColumnType("int");
+                    b.Property<int>("OrderID");
 
-                    b.Property<int>("ProductID")
-                        .HasColumnType("int");
+                    b.Property<int>("ProductID");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
+                    b.Property<int>("Quantity");
 
                     b.HasKey("OrderDetailID");
 
@@ -65,15 +57,7 @@ namespace ConsoleApp.EF.Migrations
                     b.HasOne("ConsoleApp.EF.Order", "Order")
                         .WithMany("OrderDetails")
                         .HasForeignKey("OrderID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-                });
-
-            modelBuilder.Entity("ConsoleApp.EF.Order", b =>
-                {
-                    b.Navigation("OrderDetails");
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

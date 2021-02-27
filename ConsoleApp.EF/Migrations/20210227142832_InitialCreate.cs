@@ -11,11 +11,10 @@ namespace ConsoleApp.EF.Migrations
                 name: "Orders",
                 columns: table => new
                 {
-                    OrderID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("Devart.Data.PostgreSql:Autoincrement", true),
-                    CustomerID = table.Column<int>(type: "int", nullable: false),
-                    EmployeeID = table.Column<int>(type: "int", nullable: false),
-                    OrderDate = table.Column<DateTime>(type: "timestamp", nullable: false)
+                    OrderID = table.Column<int>(nullable: false),
+                    CustomerID = table.Column<int>(nullable: false),
+                    EmployeeID = table.Column<int>(nullable: false),
+                    OrderDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -26,11 +25,10 @@ namespace ConsoleApp.EF.Migrations
                 name: "OrderDetails",
                 columns: table => new
                 {
-                    OrderDetailID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("Devart.Data.PostgreSql:Autoincrement", true),
-                    OrderID = table.Column<int>(type: "int", nullable: false),
-                    ProductID = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false)
+                    OrderDetailID = table.Column<int>(nullable: false),
+                    OrderID = table.Column<int>(nullable: false),
+                    ProductID = table.Column<int>(nullable: false),
+                    Quantity = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
