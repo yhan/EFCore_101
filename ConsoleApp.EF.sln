@@ -12,6 +12,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{27744718-1F9
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1D507490-0392-4D11-9E6E-7B68BA3D311A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp.EF.Tests", "test\ConsoleApp.EF.Tests\ConsoleApp.EF.Tests.csproj", "{7CE8E66F-ABA1-48A2-BD05-E93C18E2B9B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,9 +30,16 @@ Global
 		{1615224E-E099-403D-A724-8636250D3A85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1615224E-E099-403D-A724-8636250D3A85}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1615224E-E099-403D-A724-8636250D3A85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CE8E66F-ABA1-48A2-BD05-E93C18E2B9B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CE8E66F-ABA1-48A2-BD05-E93C18E2B9B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CE8E66F-ABA1-48A2-BD05-E93C18E2B9B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CE8E66F-ABA1-48A2-BD05-E93C18E2B9B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7CE8E66F-ABA1-48A2-BD05-E93C18E2B9B4} = {1D507490-0392-4D11-9E6E-7B68BA3D311A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {706EA028-4430-4F39-B0A4-5CDD6BD6FDE7}
