@@ -41,10 +41,9 @@ namespace ConsoleApp.EF
                 .AddTransient<MyApp>()
                 .BuildServiceProvider();
 
-
-            svcProvider.GetService<MyApp>().Run();
+            using var myApp = svcProvider.GetService<MyApp>();
+            myApp?.Run();
             
-
             Console.WriteLine("Hello World!");
         }
         

@@ -2,7 +2,7 @@
 
 namespace ConsoleApp.EF
 {
-    public class MyApp
+    public class MyApp : IDisposable
     {
         private readonly MyContext _myContext;
 
@@ -17,6 +17,11 @@ namespace ConsoleApp.EF
             {
                 Console.WriteLine(detail.Order.OrderID);
             }
+        }
+
+        public void Dispose()
+        {
+            _myContext?.Dispose();
         }
     }
 }
