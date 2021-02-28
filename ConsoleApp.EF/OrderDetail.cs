@@ -19,6 +19,17 @@ namespace ConsoleApp.EF
         public int EmployeeID { get; set; }
         public DateTime CreatedAt { get; set; }
 
+        public Order(int customerId, int employeeId, DateTime createdAt)
+        {
+            CustomerID = customerId;
+            EmployeeID = employeeId;
+            CreatedAt = createdAt;
+        }
+        public Order()
+        {
+            
+        }
+
         public List<OrderDetail> OrderDetails { get; set; }
     }
 
