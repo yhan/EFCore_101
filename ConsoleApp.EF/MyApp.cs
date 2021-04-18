@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace ConsoleApp.EF
 {
@@ -15,13 +16,13 @@ namespace ConsoleApp.EF
 
         public void Run()
         {
-            var myContext = new MyContext();
-            var offerIds = new List<Guid>();
+            var context = _myContext;
+            var _offerIds = new List<Guid> {Guid.Empty, Guid.NewGuid()};
 
-            var paymentValue = (from o in myContext.Offers
+            var paymentValue = (from o in context.Offers.AsNoTracking()
                 from r in o.Receivables
                 from p in r.Payments
-                where offerIds.Contains(o.Id)
+                where _offerIds.Contains(o.Id)
                 group p by o.Id into paymentGroupsByOffer
                 select new 
                 {
@@ -29,24 +30,43 @@ namespace ConsoleApp.EF
                     Sum = paymentGroupsByOffer.Select(p => p).Sum(p => p.Amount)
                 }).ToDictionary(x => x.OfferId, x =>x.Sum);
 
-            var receivableValue= (from o in myContext.Offers
+            var receivableValue= (from o in context.Offers.AsNoTracking()
                 from r in o.Receivables
-                where offerIds.Contains(o.Id)
+                where _offerIds.Contains(o.Id)
                 group r by o.Id
                 into receivableGroupByOffer
+                let recFlatten = receivableGroupByOffer
                 select new
                 {
                     OfferId = receivableGroupByOffer.Key,
-                    Calc = receivableGroupByOffer.Select(r => r).Sum(r => r.FinancedAmount - r.InitialRdgAmount)
-                }).ToDictionary(x => x.OfferId, x=> x.Calc);
+                    Rec = recFlatten
+                }).ToDictionary(x => x.OfferId,
+                                x=> x.Rec );
 
             var offerMap = new Dictionary<Guid, decimal>();
             foreach (var a in receivableValue)
             {
-                var b = paymentValue[a.Key];
-                offerMap.Add(a.Key, b - a.Value);
-            }
+                var valueOnPayments = paymentValue[a.Key];
+                var receivables = a.Value;
+                var initRdg = receivables.Select(r => r.InitialRdgAmountProducer2(r)?? 0M);
 
+                var valueOnReceivable = receivables.Sum(r => r.FinancedAmount) - initRdg.Sum(r => r);
+                offerMap.Add(a.Key, valueOnReceivable - valueOnPayments);
+            }
+            // rdg=  CommissionSale.IsValid() ? Math.Round(CommissionSale.RDG * FinancedAmount, 2) : (decimal?)null;
+            // formula: receivable.FinancedAmount - (receivable.InitialRdgAmount ?? 0M) - payments.Sum(x => x.Amount);
+        }
+
+        public class Duo
+        {
+            public IEnumerable<CommissionSale> Comm { get; }
+            public IEnumerable<decimal> FinancedAmount { get; }
+
+            public Duo(IEnumerable<CommissionSale> comm, IEnumerable<decimal> financedAmount)
+            {
+                Comm = comm;
+                FinancedAmount = financedAmount;
+            }
         }
 
         private void IterateOrderDetails()

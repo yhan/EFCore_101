@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace ConsoleApp.EF
 {
@@ -18,9 +19,18 @@ namespace ConsoleApp.EF
         {
         }
 
+        public static readonly ILoggerFactory MyLoggerFactory
+            = LoggerFactory.Create(builder => { builder.AddConsole(); });
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {           
+        {
+            optionsBuilder.UseLoggerFactory(MyLoggerFactory);
             optionsBuilder.UsePostgreSql(Program.ConnectionString);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Receivable>().OwnsOne(r => r.CommissionSale);
         }
 
         public MyContext()
