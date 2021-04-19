@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConsoleApp.EF
 {
@@ -33,6 +34,9 @@ namespace ConsoleApp.EF
         }
 
         public Guid Id { get; set; }
+
+        [ForeignKey("Offer")]
+        public Guid? Offer_Id { get; set; }
 
         public decimal FinancedAmount { get; set; }
 

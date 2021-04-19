@@ -42,7 +42,7 @@ namespace ConsoleApp.EF
                 .BuildServiceProvider();
 
             using var myApp = svcProvider.GetService<MyApp>();
-            myApp?.Run();
+            myApp?.Run2();
             
             Console.WriteLine("Hello World!");
         }
