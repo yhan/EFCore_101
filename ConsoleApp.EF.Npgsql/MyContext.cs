@@ -20,5 +20,13 @@ namespace ConsoleApp.EF.Npgsql
             optionsBuilder.LogTo(Console.WriteLine);
             optionsBuilder.UseNpgsql(ConnectionStringNpgsql);
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            
+            modelBuilder.Entity<Blog>(entity => { entity.Property(e => e.Name).IsRequired(); });
+
+            // modelBuilder.Entity<Blog>().HasData(new Blog { Id = 1, Name = "Hello world" });
+        }
     }
 }
