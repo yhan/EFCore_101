@@ -9,7 +9,8 @@ namespace ConsoleApp.EF
         public int OrderID { get; set; }
         public int ProductID { get; set; }
         public int Quantity { get; set; }
-        public Order Order { get; set; }
+        
+        public virtual Order Order { get; set; }
     }
 
     public class Order
@@ -18,7 +19,8 @@ namespace ConsoleApp.EF
         public int CustomerID { get; set; }
         public int EmployeeID { get; set; }
         public DateTime OrderDate { get; set; }
-        public List<OrderDetail> OrderDetails { get; set; }
+        
+        public virtual List<OrderDetail> OrderDetails { get; set; }
     }
 
 }

@@ -18,9 +18,10 @@ namespace ConsoleApp.EF.Npgsql
         private static readonly string ConnectionStringNpgsql = $"Host=localhost;Port=5433;Database={DbName};Username=postgres;Password=root";
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
+        { 
             optionsBuilder.LogTo(Console.WriteLine);
             optionsBuilder.UseNpgsql(ConnectionStringNpgsql);
+            optionsBuilder.UseLazyLoadingProxies();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
