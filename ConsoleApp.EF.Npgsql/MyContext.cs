@@ -9,6 +9,8 @@ namespace ConsoleApp.EF.Npgsql
         public DbSet<Order> Orders { get; set; }
 
         public DbSet<Blog> Blogs { get; set; }
+        
+        public DbSet<Post> Posts { get; set; }
 
         private const string DbName = "StoreDB2";
         private const string Schema = "public";
@@ -23,10 +25,11 @@ namespace ConsoleApp.EF.Npgsql
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
             modelBuilder.Entity<Blog>(entity => { entity.Property(e => e.Name).IsRequired(); });
 
-            // modelBuilder.Entity<Blog>().HasData(new Blog { Id = 1, Name = "Hello world" });
+            // modelBuilder.Entity<Blog>().HasData(new Blog { Id = 1, Name = "Hello world" });   => Fail: seed did nothing
+
+            modelBuilder.Entity<Post>().OwnsOne(post => post.AuthorName);
         }
     }
 }
