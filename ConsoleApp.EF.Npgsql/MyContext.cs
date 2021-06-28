@@ -21,7 +21,7 @@ namespace ConsoleApp.EF.Npgsql
         { 
             optionsBuilder.LogTo(Console.WriteLine);
             optionsBuilder.UseNpgsql(ConnectionStringNpgsql);
-            optionsBuilder.UseLazyLoadingProxies();
+            //optionsBuilder.UseLazyLoadingProxies();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

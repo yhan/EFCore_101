@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Transactions;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.Logging;
 
@@ -19,6 +21,8 @@ namespace ConsoleApp.EF.Npgsql
             //DealWithEfCache();
 
             await LazyLoading();
+
+            await TwoThreadsTwoDbContextsWithThreadsInParallel();
         }
 
         private static async Task LazyLoading()
@@ -44,9 +48,6 @@ namespace ConsoleApp.EF.Npgsql
                 var blogName = post.Blog.Name;
             }
         }
-
-
-
         private static void DealWithEfCache()
         {
             //https://codethug.com/2016/02/19/Entity-Framework-Cache-Busting/
@@ -91,8 +92,6 @@ namespace ConsoleApp.EF.Npgsql
 
         private static void Seed()
         {
-            #region CustomSeeding
-
             using (var seedContext = new MyContext())
             {
                 seedContext.Database.EnsureCreated();
@@ -117,8 +116,145 @@ namespace ConsoleApp.EF.Npgsql
 
                 seedContext.SaveChanges();
             }
+            Console.WriteLine("Save finished");
+        }
 
-            #endregion
+        /// <summary>
+        /// Final solution
+        /// </summary>
+        private static async Task TwoThreadsTwoDbContextsWithThreadsInParallel()
+        {
+            using var scope = new TransactionScope(asyncFlowOption: TransactionScopeAsyncFlowOption.Enabled
+                /* With this, transaction scope does not have to be disposed on the same thread that it is created*/);
+            
+            Console.WriteLine($"[debug][create TS]Current thread: {Thread.CurrentThread.ManagedThreadId}");
+            var t1 = Task.Run(async () =>
+            {
+                await using var context = new MyContext();
+                var blog1 = context.Blogs.Add(new Blog
+                {
+                    Name = "blog1",
+                    CreatedTimestamp = DateTime.Now
+                });
+                await context.SaveChangesAsync();
+                blog1.State = EntityState.Detached;
+            });
+
+            var t2 = Task.Run(async () =>
+            {
+                await using var context = new MyContext();
+                var blog2= context.Blogs.Add(new Blog
+                {
+                    Name = "blog2",
+                    CreatedTimestamp = DateTime.Now
+                });
+                await context.SaveChangesAsync();
+                blog2.State = EntityState.Detached;
+                
+            });
+
+            await Task.WhenAll(t1, t2);
+
+            Console.WriteLine($"[debug][dispose TS]Current thread: {Environment.CurrentManagedThreadId}");
+            scope.Complete();
+        }
+        
+        private static async Task TwoThreadsTwoDbContextsWithThreads_Sequentially()
+        {
+            // Fixed:
+            // System.InvalidOperationException:
+            //
+            // A TransactionScope must be disposed on the same thread that it was created.
+
+            using var scope = new TransactionScope(asyncFlowOption: TransactionScopeAsyncFlowOption.Enabled);
+            
+            await using var context = new MyContext();
+            var blog1 = new Blog
+            {
+                Name = "blog1",
+                CreatedTimestamp = DateTime.Now
+            };
+            var addedBlog1 = context.Blogs.Add(blog1);
+            await context.SaveChangesAsync();
+            addedBlog1.State = EntityState.Detached;
+
+            var addedBlog2 = context.Blogs.Add(new Blog
+            {
+                Name = "blog2",
+                CreatedTimestamp = DateTime.Now
+            });
+            await context.SaveChangesAsync();
+            addedBlog2.State = EntityState.Detached;
+            
+            scope.Complete();
+        }
+
+
+        private static async Task ThreadsCanNotShareDbContext()
+        {
+            // System.InvalidOperationException:
+            //
+            // An attempt was made to use the context instance while it is being configured.
+            // A DbContext instance cannot be used inside 'OnConfiguring' since it is still being configured at this point.
+            // This can happen if a second operation is started on this context instance before a previous operation completed.
+            // Any instance members are not guaranteed to be thread safe.
+            
+            var context = new MyContext();
+
+            var t1 = Task.Run(() =>
+            {
+                context.Blogs.Add(new Blog
+                {
+                    Name = "blog1",
+                    CreatedTimestamp = DateTime.Now
+                });
+            });
+
+            var t2 = Task.Run(() =>
+            {
+                context.Blogs.Add(new Blog
+                {
+                    Name = "blog2",
+                    CreatedTimestamp = DateTime.Now
+                });
+            });
+
+            await Task.WhenAll(t1, t2);
+        }
+        
+        
+        private static async Task ThreadsCanNotShareDbContext_UsingTwoDbContext_WithoutTransaction()
+        {
+            // System.InvalidOperationException:
+            //
+            // An attempt was made to use the context instance while it is being configured.
+            // A DbContext instance cannot be used inside 'OnConfiguring' since it is still being configured at this point.
+            // This can happen if a second operation is started on this context instance before a previous operation completed.
+            // Any instance members are not guaranteed to be thread safe.
+            
+            var t1 = Task.Run(async () =>
+            {
+                var context = new MyContext();
+                context.Blogs.Add(new Blog
+                {
+                    Name = "blog1",
+                    CreatedTimestamp = DateTime.Now
+                });
+                await context.SaveChangesAsync();
+            });
+
+            var t2 = Task.Run(async () =>
+            {
+                var context = new MyContext();
+                context.Blogs.Add(new Blog
+                {
+                    Name = "blog2",
+                    CreatedTimestamp = DateTime.Now
+                });
+                await context.SaveChangesAsync();
+            });
+
+            await Task.WhenAll(t1, t2);
         }
     }
 }
