@@ -12,7 +12,7 @@ namespace ConsoleApp.EF.Npgsql
         
         public DbSet<Post> Posts { get; set; }
 
-        private const string DbName = "StoreDB2";
+        private const string DbName = "StoreDB";
         private const string Schema = "public";
         
         private static readonly string ConnectionStringNpgsql = $"Host=localhost;Port=5433;Database={DbName};Username=postgres;Password=root";
