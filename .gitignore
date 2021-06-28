@@ -362,5 +362,4 @@ MigrationBackup/
 FodyWeavers.xsd
 
 ConsoleApp1
-
-.idea/
+.idea
